@@ -8,3 +8,4 @@ schedules.txt
 .DS_Store
 test_llm.py
 test_tool.py
+test_graph.py
