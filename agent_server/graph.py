@@ -15,6 +15,7 @@ load_dotenv()
 # ---- State Definition ----
 class AgentState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
+    decision: str | None
 
 
 # ---- LLM with Tool Bound ----
@@ -49,10 +50,14 @@ def confirm_node(state: AgentState):
         "args": tool_call["args"],
     })
 
-    if decision == "approve":
-        return Command(goto="execute_tool")
-    else:
-        return Command(goto="discard")
+    return {"decision": decision}
+
+
+# ---- Conditional Edge: approve or reject? ----
+def check_decision(state: AgentState):
+    if state.get("decision") == "approve":
+        return "execute_tool"
+    return "discard"
 
 
 # ---- Node: execute_tool (actually runs create_schedule) ----
@@ -95,6 +100,11 @@ def build_graph():
     graph.add_conditional_edges("agent", check_tool_call, {
         "confirm": "confirm",
         END: END,
+    })
+
+    graph.add_conditional_edges("confirm", check_decision, {
+        "execute_tool": "execute_tool",
+        "discard": "discard",
     })
 
     graph.add_edge("execute_tool", END)
