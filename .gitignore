@@ -1,0 +1,8 @@
+.env
+venv/
+__pycache__/
+*.pyc
+schedules.txt
+.temporal/
+.vscode/
+.DS_Store
