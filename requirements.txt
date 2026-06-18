@@ -3,6 +3,7 @@ uvicorn>=0.28.0,<0.30.0
 langchain>=0.2.0,<0.3.0
 langchain-core>=0.2.38,<0.3.0
 langgraph>=0.2.0,<0.3.0
+langgraph-checkpoint>=2.0.10,<3.0.0
 langchain-groq>=0.1.0,<0.2.0
 requests>=2.31.0,<3.0.0
 sseclient-py>=1.8.0,<2.0.0

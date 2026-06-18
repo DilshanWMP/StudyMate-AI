@@ -6,3 +6,7 @@ schedules.txt
 .temporal/
 .vscode/
 .DS_Store
+test_llm.py
+test_tool.py
+test_graph.py
+test_interrupt_only.py
