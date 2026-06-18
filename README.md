@@ -40,7 +40,7 @@ This proves the full loop works: `/chat` → graph runs → reply pushed to `str
 
 ---
 
-## Testing the Confirmation Flow
+## Testing the Confirmation Flow (Approval)
 
 1. In **Terminal 3**, send a schedule request:
    ```powershell
@@ -52,3 +52,20 @@ This proves the full loop works: `/chat` → graph runs → reply pushed to `str
    curl.exe -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '{\"message\": \"yes\", \"thread_id\": \"t2\"}'
    ```
 4. Check that `schedules.txt` gets the new entry.
+
+---
+
+## Testing the Rejection Flow
+
+1. In **Terminal 3**, send a schedule request with a new `thread_id`:
+   ```powershell
+   curl.exe -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '{\"message\": \"remind me to call mom at 8pm\", \"thread_id\": \"t4\"}'
+   ```
+2. **Terminal 2** should show a `confirmation_prompt` type message.
+3. In **Terminal 3**, reject it using the same `thread_id`:
+   ```powershell
+   curl.exe -X POST http://localhost:8000/chat -H "Content-Type: application/json" -d '{\"message\": \"no\", \"thread_id\": \"t4\"}'
+   ```
+4. **Terminal 2** should show a `chat_reply` stating `"Schedule request discarded by user."` (or similar).
+5. Check `schedules.txt` to confirm that the "call mom" entry was **not** added.
+
