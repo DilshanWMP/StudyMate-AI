@@ -26,10 +26,12 @@ class ChatRequest(BaseModel):
     thread_id: str = "default"
 
 
-def extract_last_ai_text(messages) -> str:
-    """Find the most recent AI message with plain text content."""
+def extract_last_reply_text(messages) -> str:
+    """Find the most recent message with displayable content —
+    either a ToolMessage (from execute_tool/discard) or an AIMessage."""
     for msg in reversed(messages):
-        if msg.__class__.__name__ == "AIMessage" and msg.content:
+        cls_name = msg.__class__.__name__
+        if cls_name in ("ToolMessage", "AIMessage") and msg.content:
             return msg.content
     return ""
 
@@ -70,13 +72,7 @@ async def chat(req: ChatRequest):
 
     if not interrupted:
         state = app_graph.get_state(config)
-        reply_text = extract_last_ai_text(state.values.get("messages", []))
-        if not reply_text and final_chunk:
-            for node_output in final_chunk.values():
-                if "messages" in node_output:
-                    last = node_output["messages"][-1]
-                    if hasattr(last, "content") and last.content:
-                        reply_text = last.content
+        reply_text = extract_last_reply_text(state.values.get("messages", []))
         await push_to_stream("chat_reply", reply_text or "Done.")
 
     return {"status": "ok"}
