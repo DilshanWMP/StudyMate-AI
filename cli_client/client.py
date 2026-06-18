@@ -31,13 +31,15 @@ def display_message(message: dict):
     text = message.get("text", "")
 
     if msg_type == "notification":
-        print(f"\n{text}\nYou: ", end="", flush=True)
+        print(f"\n{text}")
     elif msg_type == "confirmation_prompt":
-        print(f"\n[CONFIRM] {text}\nYou: ", end="", flush=True)
+        print(f"\n[CONFIRM] {text}")
     elif msg_type == "chat_reply":
-        print(f"\nAgent: {text}\nYou: ", end="", flush=True)
+        print(f"\nAgent: {text}")
     else:
-        print(f"\n[{msg_type}] {text}\nYou: ", end="", flush=True)
+        print(f"\n[{msg_type}] {text}")
+
+    print("You: ", end="", flush=True)
 
 
 def send_message(message: str):
