@@ -27,3 +27,23 @@ def read_reminders() -> list[tuple[str, str]]:
             description, datetime_str = line.split("|", 1)
             reminders.append((description.strip(), datetime_str.strip()))
     return reminders
+
+def remove_reminder(description: str, datetime_str: str) -> None:
+    """Remove a specific reminder from schedules.txt after it has fired."""
+    if not os.path.exists(SCHEDULES_FILE):
+        return
+
+    remaining = []
+    with open(SCHEDULES_FILE, "r", encoding="utf-8") as f:
+        for line in f:
+            stripped = line.strip()
+            if not stripped or "|" not in stripped:
+                continue
+            desc, dt = stripped.split("|", 1)
+            if desc.strip() == description.strip() and dt.strip() == datetime_str.strip():
+                continue  # skip this one, it's being removed
+            remaining.append(stripped)
+
+    with open(SCHEDULES_FILE, "w", encoding="utf-8") as f:
+        for line in remaining:
+            f.write(line + "\n")

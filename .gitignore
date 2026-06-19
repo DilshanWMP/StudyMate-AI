@@ -11,3 +11,5 @@ test_tool.py
 test_graph.py
 test_interrupt_only.py
 test_stream.py
+test_activity.py
+test_activity_run.py
