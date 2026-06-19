@@ -13,8 +13,11 @@ def create_schedule(description: str, datetime: str) -> str:
     Args:
         description: A short description of what the reminder is for,
             e.g. "Study DSP" or "Submit assignment".
-        datetime: The date and/or time the reminder should fire,
-            in a clear human-readable format, e.g. "2026-06-20 18:00".
+        datetime: The exact date and time the reminder should fire,
+            STRICTLY in the format "YYYY-MM-DD HH:MM" (24-hour time),
+            e.g. "2026-06-20 18:00". Always resolve relative terms like
+            "tomorrow" or "in 10 minutes" into this exact format yourself
+            based on the current date and time before calling this tool.
     """
     save_reminder(description, datetime)
     return f"Schedule created: {description} at {datetime}"
