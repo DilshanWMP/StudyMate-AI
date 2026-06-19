@@ -7,6 +7,8 @@ from langgraph.graph.message import add_messages
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.types import interrupt, Command
 from dotenv import load_dotenv
+from datetime import datetime
+from langchain_core.messages import SystemMessage
 
 from tools import create_schedule
 
@@ -28,9 +30,16 @@ llm_with_tools = llm.bind_tools([create_schedule])
 
 # ---- Node: agent (calls the LLM) ----
 def agent_node(state: AgentState):
-    response = llm_with_tools.invoke(state["messages"])
+    current_time_context = SystemMessage(
+        content=(
+            f"The current date and time is {datetime.now().strftime('%Y-%m-%d %H:%M')} "
+            f"(24-hour format). Use this as the reference point for resolving any "
+            f"relative time expressions like 'tomorrow', 'in 10 minutes', or 'tonight'."
+        )
+    )
+    messages_with_context = [current_time_context] + state["messages"]
+    response = llm_with_tools.invoke(messages_with_context)
     return {"messages": [response]}
-
 
 # ---- Conditional Edge: did the LLM propose a tool call? ----
 def check_tool_call(state: AgentState):

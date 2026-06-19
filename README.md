@@ -11,7 +11,34 @@
    uvicorn agent_server.main:app --reload --port 8000
    ```
 
-## How to Test It Properly
+## Running the Temporal Server and Worker
+
+1. Start the Temporal dev server:
+   ```powershell
+   temporal server start-dev
+   ```
+2. Start the Temporal worker (in a new terminal):
+   ```powershell
+   venv\Scripts\activate
+   python temporal_worker/worker.py
+   ```
+3. Start the reminder check workflow (in a new terminal):
+   ```powershell
+   venv\Scripts\activate
+   python temporal_worker/start_workflow.py
+   ```
+
+## Running the Interactive CLI Client
+
+As an alternative to manual `curl` commands, you can use the interactive CLI client to chat with the agent and receive streaming responses in a single terminal:
+
+1. Activate virtual environment and run the client:
+   ```powershell
+   venv\Scripts\activate
+   python cli_client/client.py
+   ```
+
+## How to Test It (Using curl)
 
 You'll need three terminal windows open simultaneously, all with `(venv)` active:
 
